@@ -34,3 +34,8 @@ module "logpush" {
   
 }
 
+module "ratelimit" {
+  source = "./modules/zones_params/rate_limit"
+  zones_names_ids = var.zone_names_ids
+  
+}
