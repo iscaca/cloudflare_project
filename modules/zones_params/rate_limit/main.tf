@@ -2,9 +2,17 @@ terraform {
   required_providers {
     cloudflare = {
         source = "cloudflare/cloudflare"
-        version = "~> 3.0"
+        version = "~> 4.0"
     }
   }
+}
+
+variable "zones_names_ids" {
+  type = list(object({
+    zone_id = string
+    zone    = string
+  }))
+  
 }
 
 resource "cloudflare_ruleset" "zone_level_rate_limit" {
@@ -28,4 +36,16 @@ resource "cloudflare_ruleset" "zone_level_rate_limit" {
         enabled = true
     } 
   
+      rules {
+        action = "block"
+        ratelimit {
+          characteristics = ["cf.colo.id", "ip.src"]
+          period = 60
+          requests_per_period = 1000
+          mitigation_timeout = 60
+        }
+        expression = "(http.request.uri.path matches \"/*\")"
+        description = "Default Rate limiting rule"
+        enabled = true
+    } 
 }

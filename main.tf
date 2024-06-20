@@ -2,7 +2,7 @@ terraform {
   required_providers {
     cloudflare = {
         source = "cloudflare/cloudflare"
-        version = "~> 3.0"
+        version = "~> 4.0"
     }
   }
 }
@@ -34,8 +34,14 @@ module "logpush" {
   
 }
 
-module "ratelimit" {
+module "rate_limit" {
   source = "./modules/zones_params/rate_limit"
   zones_names_ids = var.zone_names_ids
+  
+}
+
+module "waf_account_level" {
+  source = "./modules/zones_params/raf_account_level"
+  account_id = var.account_id
   
 }
